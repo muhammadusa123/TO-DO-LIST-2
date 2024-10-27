@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap 4 Navbar</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Todolist</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Info</a>
+        </li>
+        <li class="nav-item disabled">
+          <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <h2 class="text-center">Todo list</h2>
+  </div>
+
+  <div class="form-group">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" class="form-control" id="title" aria-describedby="emailHelp">
+    <div id="emailHelp" class="form-text">Add an item to the list</div>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label><br>
+    <textarea class="form-control" placeholder="Leave a comment here" id="description"></textarea>
+  </div>
+
+  <button type="submit" id="add" class="btn btn-primary">Add to list</button>
+  <button type="submit" id="add" class="btn btn-primary" onclick = "clearStorage()">Clear list</button>
+
+  <div id="items" class="my-4">
+    <h5>Your Items</h5>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">S.No</th>
+          <th scope="col">Item title</th>
+          <th scope="col">Item Description</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <!-- Items will be populated here -->
+      </tbody>
+    </table>
+  </div>
+  <!-- Bootstrap JavaScript and Dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    function updateTable() {
+      const tableBody = document.getElementById("tablebody");
+      const itemJsonArray = localStorage.getItem('itemsJson') ? JSON.parse(localStorage.getItem('itemsJson')) : [];
+      let str = "";
+      itemJsonArray.forEach((element, index) => {
+        str += `
+          <tr>
+            <th scope="row">${index + 1}</th>
+            <td>${element[0]}</td>
+            <td>${element[1]}</td>
+            <td><button class="btn btn-sm btn-danger" onclick="deleted(${index})">Delete</button></td>
+          </tr>`;
+      });
+      tableBody.innerHTML = str;
+    }
+
+    document.getElementById("add").addEventListener("click", () => {
+      // Get input values
+      const tit = document.getElementById('title').value;
+      const desc = document.getElementById('description').value;
+
+      // Retrieve and update localStorage
+      let itemJsonArray = [];
+      if (localStorage.getItem('itemsJson') !== null) {
+        itemJsonArray = JSON.parse(localStorage.getItem('itemsJson'));
+      }
+      itemJsonArray.push([tit, desc]);
+      localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+
+      // Clear input fields
+      document.getElementById('title').value = '';
+      document.getElementById('description').value = '';
+
+      // Update table
+      updateTable();
+    });
+
+    function deleted(itemIndex) {
+      console.log("Delete", itemIndex);
+      let itemJsonArray = localStorage.getItem('itemsJson');
+      itemJsonArray = JSON.parse(itemJsonArray);
+
+      // Delete item at index
+      itemJsonArray.splice(itemIndex, 1);
+      localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+
+      // Update table
+      updateTable();
+    }
+
+    // Populate table on page load
+    window.addEventListener('load', updateTable);
+  
+    function clearStorage() {
+  // Display a confirmation dialog
+  if (window.confirm('Are you sure you want to clear all items? This action cannot be undone.')) {
+    console.log('Clearing the storage');
+    localStorage.clear();
+    updateTable();  // Call updateTable to refresh the table
+  } else {
+    console.log('Clear operation canceled');
+  }
+}
+
+  </script>
+
+</body>
+
+</html>

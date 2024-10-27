@@ -1,0 +1,68 @@
+//populate the table
+      let tableBody = document.getElementById("tablebody");
+      let str = "";
+      itemJsonArray.forEach(( element, index => {
+        str += `
+          < tr >
+            <th scope="row">${index}</th>
+            <td>${element[0]}</td>
+            <td>${element[1]}</td>
+            <td><button class="btn btn-sm btn-primary">Delete</button></td>
+          </tr > `;
+
+
+      }));
+
+
+      
+
+
+      console.log("Updating List....");
+      tit = document.getElementById('title').value;
+      desc = document.getElementById('description').value;
+      if (localStorage.getItem('itemJson') == null) {
+        itemJsonArray = [];
+        itemJsonArray.push([tit, desc]);
+        localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
+      }
+      else {
+        itemJsonArraystr = localStorage.getItem('itemsJson')
+        itemsJsonArray = Json.parse(itemsJsonArrayStr);
+        itemsJsonArray.push([tit, desc]);
+        localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
+      }
+      
+      
+
+      // Function to add a new to-do item to the table
+function addTodo() {
+    // Get the value from the input field
+    const input = document.getElementById('todoInput');
+    const newTodo = input.value.trim();
+
+    // Check if the input is not empty
+    if (newTodo === 'tototototo') {
+        alert('Please enter a to-do item.');
+        return;
+    }
+
+    // Create a new row and cells
+    const table = document.getElementById('todoTable').getElementsByTagName('tbody')[0];
+    const newRow = table.insertRow();
+
+    // Create a cell for the task
+    const taskCell = newRow.insertCell(0);
+    taskCell.textContent = newTodo;
+
+    // Create a cell for the action (delete button)
+    const actionCell = newRow.insertCell(1);
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function() {
+        table.deleteRow(newRow.rowIndex - 1); // Remove the row from the table
+    };
+    actionCell.appendChild(deleteButton);
+
+    // Clear the input field
+    input.value = 'todododod';
+}
